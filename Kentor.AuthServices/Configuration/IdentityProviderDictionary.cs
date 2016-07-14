@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Kentor.AuthServices.Configuration
 {
     /// <summary>
@@ -125,6 +126,10 @@ namespace Kentor.AuthServices.Configuration
         /// <returns>True if an idp with the given entity id was found.</returns>
         public bool TryGetValue(EntityId idpEntityId, out IdentityProvider idp)
         {
+            var idpVal = "idpEntityId: " + idpEntityId.Id;
+            Logging.Logger.LogTrace("idpEntityId", idpVal);
+            var dictionaryVals = dictionary.Aggregate(string.Empty, (current, item) => current + (item.Key + " : " + item.Value));
+            Logging.Logger.LogTrace("idpDictionary", dictionaryVals);
             lock (dictionary)
             {
                 return dictionary.TryGetValue(idpEntityId, out idp);
