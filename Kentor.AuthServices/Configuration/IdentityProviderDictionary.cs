@@ -29,8 +29,14 @@ namespace Kentor.AuthServices.Configuration
         private Action<Dictionary<EntityId, IdentityProvider>> _logDictionary = (iDictionary) =>
         {
             var dictionaryVals = iDictionary.Aggregate(string.Empty,
-                (current, item) => current + (item.Key + " : " + item.Value));
-            Logging.Logger.LogTrace("idpDictionary", dictionaryVals);
+                (current, item) => current + (item.Key + " : " + item.Value + " entityId : " + item.Value.EntityId.Id));
+            Logging.Logger.LogBusinessError("idpDictionary", dictionaryVals);
+        };
+
+        private Action<EntityId> _logEntityId = (iEntityId) =>
+        {
+            var idpVal = "idpEntityId: " + iEntityId.Id;
+            Logging.Logger.LogBusinessError("idpEntityId", idpVal);
         };
 
         /// <summary>
@@ -48,6 +54,8 @@ namespace Kentor.AuthServices.Configuration
                     throw new ArgumentNullException(nameof(entityId));
                 }
 
+                _logDictionary(dictionary);
+                _logEntityId(entityId);
                 lock(dictionary)
                 {
                     try
@@ -136,8 +144,7 @@ namespace Kentor.AuthServices.Configuration
         /// <returns>True if an idp with the given entity id was found.</returns>
         public bool TryGetValue(EntityId idpEntityId, out IdentityProvider idp)
         {
-            var idpVal = "idpEntityId: " + idpEntityId.Id;
-            Logging.Logger.LogTrace("idpEntityId", idpVal);
+            _logEntityId(idpEntityId);
             _logDictionary(dictionary);
             lock (dictionary)
             {
