@@ -189,7 +189,7 @@ namespace Kentor.AuthServices.WebSso
         /// <summary>
         /// Pending messages where the artifact has been sent.
         /// </summary>
-        public static ConcurrentDictionary<byte[], ISaml2Message> PendingMessages { get; } =
+        public static ConcurrentDictionary<byte[], ISaml2Message> PendingMessages { get; } = 
             new ConcurrentDictionary<byte[], ISaml2Message>(new ByteArrayEqualityComparer());
 
         private class ByteArrayEqualityComparer : IEqualityComparer<byte[]>

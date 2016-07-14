@@ -13,8 +13,7 @@ namespace Kentor.AuthServices.Metadata
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "SignOn")]
     public class ExtendedServiceProviderSingleSignOnDescriptor : ServiceProviderSingleSignOnDescriptor
     {
-        readonly ICollection<AttributeConsumingService> attributeConsumingServices =
-            new List<AttributeConsumingService>();
+        readonly ICollection<AttributeConsumingService> attributeConsumingServices = new List<AttributeConsumingService>();
 
         /// <summary>
         /// Attribute consuming services of the service provider.

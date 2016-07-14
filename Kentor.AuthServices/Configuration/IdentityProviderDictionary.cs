@@ -1,5 +1,6 @@
 ﻿using Kentor.AuthServices.Internal;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
 using System.Linq;
@@ -24,6 +25,13 @@ namespace Kentor.AuthServices.Configuration
     {
         private Dictionary<EntityId, IdentityProvider> dictionary =
             new Dictionary<EntityId, IdentityProvider>(EntityIdEqualityComparer.Instance);
+
+        private Action<Dictionary<EntityId, IdentityProvider>> _logDictionary = (iDictionary) =>
+        {
+            var dictionaryVals = iDictionary.Aggregate(string.Empty,
+                (current, item) => current + (item.Key + " : " + item.Value));
+            Logging.Logger.LogTrace("idpDictionary", dictionaryVals);
+        };
 
         /// <summary>
         /// Gets an idp from the entity id.
@@ -60,6 +68,7 @@ namespace Kentor.AuthServices.Configuration
                 {
                     dictionary[entityId] = value;
                 }
+                _logDictionary(dictionary);
             }
         }
 
@@ -78,6 +87,7 @@ namespace Kentor.AuthServices.Configuration
             {
                 dictionary.Add(idp.EntityId, idp);
             }
+            _logDictionary(dictionary);
         }
 
         /// <summary>
@@ -128,8 +138,7 @@ namespace Kentor.AuthServices.Configuration
         {
             var idpVal = "idpEntityId: " + idpEntityId.Id;
             Logging.Logger.LogTrace("idpEntityId", idpVal);
-            var dictionaryVals = dictionary.Aggregate(string.Empty, (current, item) => current + (item.Key + " : " + item.Value));
-            Logging.Logger.LogTrace("idpDictionary", dictionaryVals);
+            _logDictionary(dictionary);
             lock (dictionary)
             {
                 return dictionary.TryGetValue(idpEntityId, out idp);
